@@ -58,6 +58,13 @@ def print_loading(text: str, duration: float = 1.0):
     print(" ✅")
 
 
+def print_section(title: str, char: str = "="):
+    """Print a section header."""
+    print(f"\n{char * 70}")
+    print_colored(f" {title}", "bold")
+    print(f"{char * 70}\n")
+
+
 def simulate_agent_thinking(agent_name: str, task: str):
     """Simulate agent processing with visual feedback."""
     print_colored(f"\n🤖 {agent_name} Agent processing: {task}", "yellow")

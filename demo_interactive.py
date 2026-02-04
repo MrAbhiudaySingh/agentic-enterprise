@@ -521,9 +521,24 @@ Enterprise recommends a comprehensive cross-functional initiative requiring:
         # Parse the prompt
         print_loading("Parsing natural language intent")
         parsed = self._parse_user_prompt(user_prompt)
-        print_colored(f"  ✓ Objective: {parsed['objective']}", "green")
-        print_colored(f"  ✓ Target: {parsed['target']}", "green")
-        print_colored(f"  ✓ Constraint: {parsed['constraint']}", "green")
+        
+        # Show full CEO intent decomposition
+        print_colored("\n📋 PARSED CEO INTENT:", "cyan")
+        if parsed.get('primary_objective'):
+            print_colored(f"  🎯 Primary Objective: {parsed['primary_objective']}", "green")
+        else:
+            print_colored(f"  🎯 Objective: {parsed['objective']}", "green")
+        
+        if parsed.get('secondary_objective'):
+            print_colored(f"  🎯 Secondary Objective: {parsed['secondary_objective']}", "green")
+        
+        print_colored(f"  📊 Target: {parsed['target']}", "green")
+        
+        if parsed.get('inherent_tension'):
+            print_colored(f"  ⚠️  Inherent Tension: {parsed['inherent_tension']}", "red")
+        
+        if parsed['constraint'] != "None specified":
+            print_colored(f"  ⛔ Constraint: {parsed['constraint']}", "green")
         
         input("\nPress ENTER to route to agents...")
         
@@ -563,29 +578,68 @@ Enterprise recommends a comprehensive cross-functional initiative requiring:
     def _parse_user_prompt(self, prompt: str) -> Dict[str, Any]:
         """Parse user prompt to extract intent."""
         prompt_lower = prompt.lower()
+        import re
         
-        # Default retention scenario
+        # Default 
         parsed = {
             "objective": "Improve business metric",
             "target": "Not specified",
             "constraint": "None specified",
-            "metric": "general"
+            "metric": "general",
+            "secondary_objective": None,
+            "inherent_tension": None
         }
         
+        # Check for profit + CTC combination FIRST (most specific)
+        has_profit = "profit" in prompt_lower or "revenue" in prompt_lower or "margin" in prompt_lower
+        has_ctc = "ctc" in prompt_lower or "cost" in prompt_lower or "payroll" in prompt_lower or "expense" in prompt_lower
+        
+        if has_profit and has_ctc:
+            # Extract profit percentage
+            profit_match = re.search(r'(\d+)%', prompt)
+            profit_pct = profit_match.group(1) if profit_match else "15"
+            
+            # Extract CTC percentage (look for second percentage or keywords)
+            ctc_match = re.search(r'reduce.*?ctc.*?by\s+(\d+)%', prompt_lower)
+            if not ctc_match:
+                ctc_match = re.search(r'ctc.*?by\s+(\d+)%', prompt_lower)
+            ctc_pct = ctc_match.group(1) if ctc_match else "2"
+            
+            parsed["primary_objective"] = f"Increase operating profit by {profit_pct}%"
+            parsed["secondary_objective"] = f"Reduce CTC by {ctc_pct}%"
+            parsed["objective"] = parsed["primary_objective"]
+            parsed["target"] = f"+{profit_pct}% profit, -{ctc_pct}% CTC"
+            parsed["metric"] = "profit_ctc_optimization"
+            parsed["inherent_tension"] = "Growth requires investment but costs must decrease"
+        
         # Check for retention
-        if "retention" in prompt_lower:
+        elif "retention" in prompt_lower:
             parsed["objective"] = "Improve customer retention"
             parsed["metric"] = "retention"
-            # Extract percentage
-            import re
             match = re.search(r'(\d+)%', prompt)
             if match:
                 parsed["target"] = f"{match.group(1)}% improvement"
             else:
                 parsed["target"] = "Significant improvement"
         
+        # Check for profit only
+        elif has_profit:
+            match = re.search(r'(\d+)%', prompt)
+            pct = match.group(1) if match else "15"
+            parsed["objective"] = f"Increase operating profit by {pct}%"
+            parsed["target"] = f"+{pct}% profit growth"
+            parsed["metric"] = "profit_growth"
+        
+        # Check for CTC/cost only
+        elif has_ctc:
+            match = re.search(r'(\d+)%', prompt)
+            pct = match.group(1) if match else "10"
+            parsed["objective"] = f"Reduce CTC by {pct}%"
+            parsed["target"] = f"-{pct}% cost reduction"
+            parsed["metric"] = "cost_reduction"
+        
         # Check for CAC
-        if "cac" in prompt_lower or "acquisition cost" in prompt_lower:
+        elif "cac" in prompt_lower or "acquisition cost" in prompt_lower:
             if "reduce" in prompt_lower or "lower" in prompt_lower:
                 parsed["objective"] = "Reduce customer acquisition cost"
                 parsed["metric"] = "cac_reduction"
@@ -633,6 +687,9 @@ Enterprise recommends a comprehensive cross-functional initiative requiring:
             "support_optimization": ["Support", "Operations", "HR"],
             "sales_optimization": ["Sales", "Marketing", "Finance"],
             "expansion": ["Marketing", "Sales", "Finance", "Operations", "HR"],
+            "profit_ctc_optimization": ["Sales", "HR", "Finance", "Operations"],
+            "profit_growth": ["Sales", "Marketing", "Finance"],
+            "cost_reduction": ["HR", "Operations", "Finance"],
             "general": ["Sales", "Marketing", "Finance", "Operations", "Support", "HR"]
         }
         

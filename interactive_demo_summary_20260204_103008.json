@@ -1,0 +1,33 @@
+{
+  "generated_at": "2026-02-04T10:30:08.643259",
+  "total_budget": 1428000,
+  "total_headcount": 37,
+  "confidence": "82%",
+  "cac_neutrality": "PROVEN",
+  "agents": {
+    "sales": {
+      "budget": 283000,
+      "headcount": 8
+    },
+    "marketing": {
+      "budget": 440000,
+      "headcount": 3
+    },
+    "finance": {
+      "budget": 35000,
+      "headcount": 0
+    },
+    "operations": {
+      "budget": 350000,
+      "headcount": 0
+    },
+    "support": {
+      "budget": 200000,
+      "headcount": 6
+    },
+    "hr": {
+      "budget": 120000,
+      "headcount": 20
+    }
+  }
+}

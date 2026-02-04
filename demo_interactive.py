@@ -477,7 +477,7 @@ Enterprise recommends a comprehensive cross-functional initiative requiring:
         input("\nPress ENTER to return to menu...")
     
     def interactive_prompt(self):
-        """Allow user to enter their own prompt."""
+        """Allow user to enter their own prompt and process it."""
         clear_screen()
         print_banner()
         
@@ -502,16 +502,264 @@ Enterprise recommends a comprehensive cross-functional initiative requiring:
         if user_prompt.lower() == 'back':
             return
         
-        if user_prompt:
-            print_colored(f"\nProcessing: '{user_prompt}'", "green")
-            print_colored("\n[In full implementation, this would:", "blue")
-            print_colored("  1. Parse your prompt using NLP", "blue")
-            print_colored("  2. Route to relevant agents", "blue")
-            print_colored("  3. Generate custom recommendations", "blue")
-            print_colored("  4. Return executive dashboard]", "blue")
-            print_colored("\n[For demo, showing pre-computed retention example]", "yellow")
-            input("\nPress ENTER to see results...")
-            self.run_retention_demo()
+        if not user_prompt:
+            return
+            
+        # Process the actual prompt
+        self.current_prompt = user_prompt
+        print_colored(f"\n📝 Processing CEO Prompt: '{user_prompt}'", "green")
+        print_colored("\n⏳ Initializing Agentic Enterprise...", "cyan")
+        time.sleep(1)
+        
+        # Parse the prompt
+        print_loading("Parsing natural language intent")
+        parsed = self._parse_user_prompt(user_prompt)
+        print_colored(f"  ✓ Objective: {parsed['objective']}", "green")
+        print_colored(f"  ✓ Target: {parsed['target']}", "green")
+        print_colored(f"  ✓ Constraint: {parsed['constraint']}", "green")
+        
+        input("\nPress ENTER to route to agents...")
+        
+        # Route to relevant agents
+        print_section("AGENT ROUTING & PROCESSING", "=")
+        relevant_agents = self._determine_relevant_agents(parsed)
+        print_colored(f"\n🎯 Routing to {len(relevant_agents)} agents based on prompt:", "cyan")
+        for agent in relevant_agents:
+            print_colored(f"  → {agent}", "blue")
+        
+        # Process each agent
+        self.agent_outputs = {}
+        for agent_name in relevant_agents:
+            output = self._generate_agent_output(agent_name, parsed)
+            self.agent_outputs[agent_name] = output
+            simulate_agent_thinking(agent_name, f"Processing {len(output.get('recommendations', []))} recommendations")
+            print_colored(f"  📊 Confidence: {output.get('confidence', 0):.0%}", "green")
+            print_colored(f"  💰 Budget: ${output.get('budget', 0):,}", "yellow")
+        
+        input("\nPress ENTER to check for conflicts...")
+        
+        # Check conflicts
+        print_section("CONFLICT DETECTION", "=")
+        conflicts = self._detect_conflicts()
+        if conflicts:
+            print_colored(f"⚠️  {len(conflicts)} conflict(s) detected:", "yellow")
+            for conflict in conflicts:
+                print_colored(f"  • {conflict}", "blue")
+        else:
+            print_colored("✅ No conflicts detected - all agents aligned", "green")
+        
+        input("\nPress ENTER to view executive dashboard...")
+        
+        # Show executive dashboard
+        self._show_custom_dashboard(parsed)
+    
+    def _parse_user_prompt(self, prompt: str) -> Dict[str, Any]:
+        """Parse user prompt to extract intent."""
+        prompt_lower = prompt.lower()
+        
+        # Default retention scenario
+        parsed = {
+            "objective": "Improve business metric",
+            "target": "Not specified",
+            "constraint": "None specified",
+            "metric": "general"
+        }
+        
+        # Check for retention
+        if "retention" in prompt_lower:
+            parsed["objective"] = "Improve customer retention"
+            parsed["metric"] = "retention"
+            # Extract percentage
+            import re
+            match = re.search(r'(\d+)%', prompt)
+            if match:
+                parsed["target"] = f"{match.group(1)}% improvement"
+            else:
+                parsed["target"] = "Significant improvement"
+        
+        # Check for CAC
+        if "cac" in prompt_lower or "acquisition cost" in prompt_lower:
+            if "reduce" in prompt_lower or "lower" in prompt_lower:
+                parsed["objective"] = "Reduce customer acquisition cost"
+                parsed["metric"] = "cac_reduction"
+                match = re.search(r'(\d+)%', prompt)
+                if match:
+                    parsed["target"] = f"{match.group(1)}% reduction"
+        
+        # Check for support/response time
+        if "support" in prompt_lower or "response time" in prompt_lower:
+            parsed["objective"] = "Improve customer support efficiency"
+            parsed["metric"] = "support_optimization"
+            match = re.search(r'(\d+)\s*hour', prompt_lower)
+            if match:
+                parsed["target"] = f"Under {match.group(1)} hours"
+        
+        # Check for pipeline/sales
+        if "pipeline" in prompt_lower or "sales" in prompt_lower or "conversion" in prompt_lower:
+            parsed["objective"] = "Optimize sales pipeline performance"
+            parsed["metric"] = "sales_optimization"
+        
+        # Check for expansion/new markets
+        if "expand" in prompt_lower or "new market" in prompt_lower or "european" in prompt_lower or "launch" in prompt_lower:
+            parsed["objective"] = "Business expansion and growth"
+            parsed["metric"] = "expansion"
+        
+        # Check for constraints
+        if "without" in prompt_lower or "no" in prompt_lower or "maintain" in prompt_lower:
+            if "cac" in prompt_lower:
+                parsed["constraint"] = "No increase to CAC"
+            elif "budget" in prompt_lower:
+                parsed["constraint"] = "Within existing budget"
+            elif "headcount" in prompt_lower or "hire" in prompt_lower:
+                parsed["constraint"] = "No additional headcount"
+        
+        return parsed
+    
+    def _determine_relevant_agents(self, parsed: Dict[str, Any]) -> List[str]:
+        """Determine which agents should process this prompt."""
+        metric = parsed.get("metric", "general")
+        
+        # Map metrics to relevant agents
+        agent_mapping = {
+            "retention": ["Sales", "Marketing", "Support", "Operations"],
+            "cac_reduction": ["Marketing", "Sales", "Finance"],
+            "support_optimization": ["Support", "Operations", "HR"],
+            "sales_optimization": ["Sales", "Marketing", "Finance"],
+            "expansion": ["Marketing", "Sales", "Finance", "Operations", "HR"],
+            "general": ["Sales", "Marketing", "Finance", "Operations", "Support", "HR"]
+        }
+        
+        return agent_mapping.get(metric, agent_mapping["general"])
+    
+    def _generate_agent_output(self, agent_name: str, parsed: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate contextual agent output based on parsed prompt."""
+        metric = parsed.get("metric", "general")
+        
+        # Base outputs customized by metric
+        outputs = {
+            "Sales": {
+                "recommendations": [
+                    {"title": f"{parsed['objective']} - Sales Strategy", 
+                     "description": f"Align sales processes to achieve {parsed['target']}",
+                     "impact": "15-20% improvement in target metric"}
+                ],
+                "confidence": 0.80,
+                "budget": 150000,
+                "headcount": 3
+            },
+            "Marketing": {
+                "recommendations": [
+                    {"title": f"{parsed['objective']} - Marketing Campaign", 
+                     "description": f"Optimize marketing spend and targeting for {parsed['target']}",
+                     "impact": "20-25% improvement in efficiency"}
+                ],
+                "confidence": 0.78,
+                "budget": 200000,
+                "headcount": 2
+            },
+            "Finance": {
+                "recommendations": [
+                    {"title": f"{parsed['objective']} - Financial Model", 
+                     "description": f"Budget optimization and ROI analysis for {parsed['target']}",
+                     "impact": "Cost efficiency maintained"}
+                ],
+                "confidence": 0.90,
+                "budget": 25000,
+                "headcount": 0
+            },
+            "Operations": {
+                "recommendations": [
+                    {"title": f"{parsed['objective']} - Process Optimization", 
+                     "description": f"Streamline workflows to achieve {parsed['target']}",
+                     "impact": "30% process efficiency gain"}
+                ],
+                "confidence": 0.82,
+                "budget": 120000,
+                "headcount": 1
+            },
+            "Support": {
+                "recommendations": [
+                    {"title": f"{parsed['objective']} - Support Enhancement", 
+                     "description": f"Improve support workflows for {parsed['target']}",
+                     "impact": "25% faster resolution times"}
+                ],
+                "confidence": 0.85,
+                "budget": 80000,
+                "headcount": 4
+            },
+            "HR": {
+                "recommendations": [
+                    {"title": f"{parsed['objective']} - Workforce Planning", 
+                     "description": f"Talent acquisition strategy for {parsed['target']}",
+                     "impact": "Team capacity increased"}
+                ],
+                "confidence": 0.80,
+                "budget": 50000,
+                "headcount": 5
+            }
+        }
+        
+        return outputs.get(agent_name, outputs["Sales"])
+    
+    def _detect_conflicts(self) -> List[str]:
+        """Detect conflicts between agent outputs."""
+        conflicts = []
+        
+        # Simple conflict detection
+        total_budget = sum(o.get('budget', 0) for o in self.agent_outputs.values())
+        total_headcount = sum(o.get('headcount', 0) for o in self.agent_outputs.values())
+        
+        if total_budget > 1000000:
+            conflicts.append(f"Total budget ${total_budget:,} exceeds $1M threshold")
+        
+        if total_headcount > 20:
+            conflicts.append(f"Total headcount {total_headcount} exceeds 20 FTE limit")
+        
+        return conflicts
+    
+    def _show_custom_dashboard(self, parsed: Dict[str, Any]):
+        """Show executive dashboard for custom prompt."""
+        print_section("EXECUTIVE DASHBOARD", "=")
+        
+        total_budget = sum(o.get('budget', 0) for o in self.agent_outputs.values())
+        total_headcount = sum(o.get('headcount', 0) for o in self.agent_outputs.values())
+        avg_confidence = sum(o.get('confidence', 0) for o in self.agent_outputs.values()) / len(self.agent_outputs) if self.agent_outputs else 0
+        
+        print_colored(f"🎯 STRATEGIC GOAL: {parsed['objective']}", "cyan")
+        print_colored(f"📊 TARGET: {parsed['target']}", "cyan")
+        print_colored(f"⛔ CONSTRAINT: {parsed['constraint']}", "cyan")
+        
+        print_colored(f"\n💰 TOTAL INVESTMENT: ${total_budget:,}", "green")
+        print_colored(f"👥 TOTAL NEW HIRES: {total_headcount} FTE", "green")
+        print_colored(f"🎯 CONFIDENCE: {avg_confidence:.0%}", "green")
+        
+        print_colored("\n" + "-" * 70, "header")
+        print_colored("AGENT CONTRIBUTIONS", "bold")
+        print_colored("-" * 70, "header")
+        
+        for agent_name, output in self.agent_outputs.items():
+            print_colored(f"\n📋 {agent_name}", "yellow")
+            print_colored(f"   Budget: ${output.get('budget', 0):,} | Headcount: {output.get('headcount', 0)} | Confidence: {output.get('confidence', 0):.0%}", "blue")
+            for rec in output.get('recommendations', []):
+                print_colored(f"   • {rec['title']}", "green")
+                print_colored(f"     Impact: {rec['impact']}", "blue")
+        
+        # Save output
+        output_data = {
+            "prompt": self.current_prompt,
+            "parsed": parsed,
+            "agent_outputs": self.agent_outputs,
+            "total_budget": total_budget,
+            "total_headcount": total_headcount,
+            "generated_at": datetime.now().isoformat()
+        }
+        
+        filename = f"custom_output_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        with open(filename, 'w') as f:
+            json.dump(output_data, f, indent=2)
+        
+        print_colored(f"\n📄 Output saved to: {filename}", "blue")
+        input("\nPress ENTER to return to menu...")
     
     def main_menu(self):
         """Show main menu."""

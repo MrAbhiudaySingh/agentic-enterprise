@@ -1,0 +1,86 @@
+{
+  "prompt": "increase profit by 15% cand reduce ctc by 2%",
+  "parsed": {
+    "objective": "Improve business metric",
+    "target": "Not specified",
+    "constraint": "None specified",
+    "metric": "general"
+  },
+  "agent_outputs": {
+    "Sales": {
+      "recommendations": [
+        {
+          "title": "Improve business metric - Sales Strategy",
+          "description": "Align sales processes to achieve Not specified",
+          "impact": "15-20% improvement in target metric"
+        }
+      ],
+      "confidence": 0.8,
+      "budget": 150000,
+      "headcount": 3
+    },
+    "Marketing": {
+      "recommendations": [
+        {
+          "title": "Improve business metric - Marketing Campaign",
+          "description": "Optimize marketing spend and targeting for Not specified",
+          "impact": "20-25% improvement in efficiency"
+        }
+      ],
+      "confidence": 0.78,
+      "budget": 200000,
+      "headcount": 2
+    },
+    "Finance": {
+      "recommendations": [
+        {
+          "title": "Improve business metric - Financial Model",
+          "description": "Budget optimization and ROI analysis for Not specified",
+          "impact": "Cost efficiency maintained"
+        }
+      ],
+      "confidence": 0.9,
+      "budget": 25000,
+      "headcount": 0
+    },
+    "Operations": {
+      "recommendations": [
+        {
+          "title": "Improve business metric - Process Optimization",
+          "description": "Streamline workflows to achieve Not specified",
+          "impact": "30% process efficiency gain"
+        }
+      ],
+      "confidence": 0.82,
+      "budget": 120000,
+      "headcount": 1
+    },
+    "Support": {
+      "recommendations": [
+        {
+          "title": "Improve business metric - Support Enhancement",
+          "description": "Improve support workflows for Not specified",
+          "impact": "25% faster resolution times"
+        }
+      ],
+      "confidence": 0.85,
+      "budget": 80000,
+      "headcount": 4
+    },
+    "HR": {
+      "recommendations": [
+        {
+          "title": "Improve business metric - Workforce Planning",
+          "description": "Talent acquisition strategy for Not specified",
+          "impact": "Team capacity increased"
+        }
+      ],
+      "confidence": 0.8,
+      "budget": 50000,
+      "headcount": 5
+    }
+  },
+  "total_budget": 625000,
+  "total_headcount": 15,
+  "generated_at": "2026-02-04T11:08:33.817774"
+}

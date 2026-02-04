@@ -1,0 +1,65 @@
+{
+  "prompt": "increase profit by 15% and reduce ctc by 2%",
+  "parsed": {
+    "objective": "Increase operating profit by 15%",
+    "target": "+15% profit, -2% CTC",
+    "constraint": "None specified",
+    "metric": "profit_ctc_optimization",
+    "secondary_objective": "Reduce CTC by 2%",
+    "inherent_tension": "Growth requires investment but costs must decrease",
+    "primary_objective": "Increase operating profit by 15%"
+  },
+  "agent_outputs": {
+    "Sales": {
+      "recommendations": [
+        {
+          "title": "Increase operating profit by 15% - Sales Strategy",
+          "description": "Align sales processes to achieve +15% profit, -2% CTC",
+          "impact": "15-20% improvement in target metric"
+        }
+      ],
+      "confidence": 0.8,
+      "budget": 150000,
+      "headcount": 3
+    },
+    "HR": {
+      "recommendations": [
+        {
+          "title": "Increase operating profit by 15% - Workforce Planning",
+          "description": "Talent acquisition strategy for +15% profit, -2% CTC",
+          "impact": "Team capacity increased"
+        }
+      ],
+      "confidence": 0.8,
+      "budget": 50000,
+      "headcount": 5
+    },
+    "Finance": {
+      "recommendations": [
+        {
+          "title": "Increase operating profit by 15% - Financial Model",
+          "description": "Budget optimization and ROI analysis for +15% profit, -2% CTC",
+          "impact": "Cost efficiency maintained"
+        }
+      ],
+      "confidence": 0.9,
+      "budget": 25000,
+      "headcount": 0
+    },
+    "Operations": {
+      "recommendations": [
+        {
+          "title": "Increase operating profit by 15% - Process Optimization",
+          "description": "Streamline workflows to achieve +15% profit, -2% CTC",
+          "impact": "30% process efficiency gain"
+        }
+      ],
+      "confidence": 0.82,
+      "budget": 120000,
+      "headcount": 1
+    }
+  },
+  "total_budget": 345000,
+  "total_headcount": 9,
+  "generated_at": "2026-02-04T11:34:50.732197"
+}

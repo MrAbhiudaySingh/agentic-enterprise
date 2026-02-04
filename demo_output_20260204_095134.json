@@ -1,0 +1,100 @@
+{
+  "timestamp": "2026-02-04T09:51:34.130025",
+  "prompt": "Improve quarterly retention by 8% without increasing CAC",
+  "total_budget": 3350000,
+  "total_headcount": 37,
+  "agent_outputs": {
+    "sales": {
+      "name": "Sales Agent",
+      "recommendations": [
+        "Proactive outreach to 67,500 at-risk customers",
+        "Customer Success team expansion (8 CSMs)",
+        "Loyalty rewards program for 2+ year customers"
+      ],
+      "budget": 450000,
+      "headcount": 8,
+      "confidence": 0.85,
+      "citations": [
+        "CRM:customer_churn_analysis:67500_records",
+        "Salesforce:pipeline_data:2500_records"
+      ]
+    },
+    "marketing": {
+      "name": "Marketing Agent",
+      "recommendations": [
+        "At-risk customer win-back campaign (multi-channel)",
+        "Advocate amplification program for referrals",
+        "Lifecycle marketing automation (90-day nurture)"
+      ],
+      "budget": 850000,
+      "headcount": 3,
+      "confidence": 0.8,
+      "citations": [
+        "Marketo:campaign_history:150_records",
+        "CRM:segmentation_data:450000_records"
+      ]
+    },
+    "finance": {
+      "name": "Finance Agent",
+      "recommendations": [
+        "Budget allocation: Marketing 40%, Sales 30%, Support 20%, Ops 10%",
+        "Unit economics monitoring (maintain 10x LTV/CAC)",
+        "Sensitivity analysis for 5%, 8%, 12% retention scenarios"
+      ],
+      "budget": 0,
+      "headcount": 0,
+      "confidence": 0.9,
+      "citations": [
+        "ERP:budget_status:6_departments",
+        "ERP:unit_economics:5_metrics"
+      ]
+    },
+    "operations": {
+      "name": "Operations Agent",
+      "recommendations": [
+        "Claims processing acceleration (18.5h \u2192 12h)",
+        "Onboarding experience redesign",
+        "Renewal process automation"
+      ],
+      "budget": 350000,
+      "headcount": 0,
+      "confidence": 0.85,
+      "citations": [
+        "Zendesk:ticket_metrics:12500_records",
+        "ProcessMining:workflow_data:45_processes"
+      ]
+    },
+    "support": {
+      "name": "Support Agent",
+      "recommendations": [
+        "Predictive churn intervention system",
+        "Root cause analysis of 12,500 tickets",
+        "Satisfaction recovery program (NPS < 3.0)",
+        "Escalation prevention (reduce by 50%)"
+      ],
+      "budget": 200000,
+      "headcount": 6,
+      "confidence": 0.9,
+      "citations": [
+        "Zendesk:ticket_analysis:12500_records",
+        "Support:churn_signals:500_records"
+      ]
+    },
+    "hr": {
+      "name": "HR Agent",
+      "recommendations": [
+        "Hiring plan: 20 FTE (8 CSMs, 6 Support, 4 Claims, 2 Analysts)",
+        "Talent acquisition strategy (45-75 day timeline)",
+        "90-day onboarding excellence program",
+        "Compliance & risk management for insurance licenses"
+      ],
+      "budget": 1500000,
+      "headcount": 20,
+      "confidence": 0.85,
+      "citations": [
+        "Workday:headcount_data:620_records",
+        "HRIS:hiring_forecasts:12_roles"
+      ]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# Agentic Enterprise Operating Model
+# Requirements for the hackathon project
+
+# Core dependencies
+dataclasses>=0.6
+uuid>=1.30
+
+# Optional for enhanced functionality
+typing-extensions>=4.0.0
+
+# For web interface (optional)
+# streamlit>=1.28.0
+
+# For data handling (optional)
+# pandas>=2.0.0
+# numpy>=1.24.0
+
+# Development dependencies (optional)
+# pytest>=7.0.0
+# black>=23.0.0
+# mypy>=1.0.0
